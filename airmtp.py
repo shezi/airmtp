@@ -42,7 +42,7 @@ import subprocess
 # constants
 #
 
-AIRNEFCMD_APP_VERSION	= "1.1"
+AIRMTPCMD_APP_VERSION	= "1.1"
 
 DEFAULT_MAX_KB_PER_GET_OBJECT_REQUEST				= 1024 		# 1MB - empirically tweaked to get max download performance from Nikon bodies (too large an xfer and Nikon bodies start intermittently dropping connections)
 DEFAULT_MAX_KB_TO_BUFFER_FOR_GET_OBJECT_REQUESTS 	= 32768		# 32MB - max bytes we buffer before flushing what we have to disk
@@ -155,7 +155,7 @@ class GlobalVarsStruct:
 		self.cameraMake = CAMERA_MAKE_UNDETERMINED 
 		self.realtimeDownloadMethod = None
 		
-		self.countCardsUsed = None						# number of media cards that airnefcmd will be using/accessing this session
+		self.countCardsUsed = None						# number of media cards that airmtp will be using/accessing this session
 		self.storageId = None
 		self.mtpStorageIds = None						# list of storage IDs returned from MTP_OP_GetStorageIDs / parseMptStorageIds()
 		self.mtpDeviceInfo = None
@@ -447,13 +447,13 @@ def establishAppEnvironment():
 	g.appDataDir = None
 	if g.isFrozen and g.isWin32:
 		if os.getenv('LOCALAPPDATA'):
-			g.appDataDir = os.path.join(os.getenv('LOCALAPPDATA'), "airnef\\appdata") # typically C:\Users\<username>\AppData\Local\airnef\appdata
+			g.appDataDir = os.path.join(os.getenv('LOCALAPPDATA'), "airmtp\\appdata") # typically C:\Users\<username>\AppData\Local\airnef\appdata
 	elif g.isOSX: # for OSX we always try to store our app data under Application Support
 		userHomeDir = os.getenv('HOME')
 		if userHomeDir:
 			applicationSupportDir = os.path.join(userHomeDir, 'Library/Application Support')
 			if os.path.exists(applicationSupportDir): # probably not necessary to check existence since every system should have this directory
-				g.appDataDir = os.path.join(applicationSupportDir, 'airnef/appdata')
+				g.appDataDir = os.path.join(applicationSupportDir, 'airmtp/appdata')
 	if not g.appDataDir:
 		# none of runtime-specific cases above selected an app data directory - use directory based off our app directory
 		g.appDataDir = os.path.join(g.appDir, "appdata")
@@ -525,8 +525,8 @@ def changeCaptureDateFilterToAppStartTime():
 	# the Nikon bug produces max skew of 30 seconds (for the case of the real timestamp
 	# being 59 seconds but the camera reports it as 29, since it rounds down). This runs
 	# the risk of us downloading images taken up to 35 seconds before the user launched
-	# airnefcmd for realtime transfer (ie, images the user didn't want if he's running
-	# airnefcmd in realtime-only mode)
+	# airmtpcmd for realtime transfer (ie, images the user didn't want if he's running
+	# airmtpcmd in realtime-only mode)
 	#
 	g.objfilter_dateStartEpoch = g.appStartTimeEpoch - 35
 	g.objfilter_dateEndEpoch = None
@@ -661,7 +661,7 @@ def processCmdLine():
 	parser.add_argument('--maxgetobjtransfersizekb', help=argparse.SUPPRESS, type=int, default=DEFAULT_MAX_KB_PER_GET_OBJECT_REQUEST, required=False)	
 	parser.add_argument('--maxgetobjbuffersizekb', help=argparse.SUPPRESS, type=int, default=DEFAULT_MAX_KB_TO_BUFFER_FOR_GET_OBJECT_REQUESTS, required=False)
 	parser.add_argument('--initcmdreq_guid', help=argparse.SUPPRESS, type=str.lower, default='0x7766554433221100-0x0000000000009988', required=False) # GUID order in string is high-low
-	parser.add_argument('--initcmdreq_hostname', help=argparse.SUPPRESS, type=str, default='airnef', required=False)
+	parser.add_argument('--initcmdreq_hostname', help=argparse.SUPPRESS, type=str, default='airmtp', required=False)
 	parser.add_argument('--initcmdreq_hostver', help=argparse.SUPPRESS, type=conver_int_auto_radix, default=0x00010000, required=False)
 	parser.add_argument('--opensessionid', help=argparse.SUPPRESS, type=conver_int_auto_radix, default=None, required=False)
 	parser.add_argument('--maxclockdeltabeforesync', help=argparse.SUPPRESS, type=str.lower, default='5', required=False)
@@ -681,7 +681,7 @@ def processCmdLine():
 	#
 	# if there is a default arguments file present, add it to the argument list so that parse_args() will process it
 	#
-	defaultArgFilename = os.path.join(g.appDir, "airnefcmd-defaultopts")
+	defaultArgFilename = os.path.join(g.appDir, "airmtpcmd-defaultopts")
 	if os.path.exists(defaultArgFilename):
 		sys.argv.insert(1, "!" + defaultArgFilename) # insert as first arg (past script name), so that the options in the file can still be overriden by user-entered cmd line options
 			
@@ -1173,7 +1173,7 @@ def startMtpSession():
 	
 	
 #
-# notifies the user via the camera that an airnefcmd transfer sequence is starting,
+# notifies the user via the camera that an airmtpcmd transfer sequence is starting,
 # for cameras that don't automatically notify the user of this
 #	
 def notifyCameraUserTransferSessionStarting():
@@ -1192,7 +1192,7 @@ def notifyCameraUserTransferSessionStarting():
 			mtpwifi.execMtpOp(g.socketPrimary, MTP_OP_Sony_Get_Request, struct.pack('<I', 0x4))
 
 #
-# notifies the user via the camera that an airnefcmd transfer sequence has ended
+# notifies the user via the camera that an airmtpcmd transfer sequence has ended
 # for cameras that don't automatically notify the user of this.
 #	
 def notifyCameraUserTransferSessionEnding():
@@ -1266,7 +1266,7 @@ def endMtpSession():
 	#
 	# issue close session. There is a bug on Nikon cameras where if we end the session too
 	# soon after starting one the camera will not respond to a subsequent MTP_TCPIP_REQ_INIT_CMD_REQ
-	# the next time we connect to the camera. This typically only happens during airnef development since
+	# the next time we connect to the camera. This typically only happens during airmtp development since
 	# not many user cases have us exiting less than 1 second before starting. But it's annoying for
 	# me to have to keep cycling the WiFi on the camera during development :) So the fix is to delay
 	# issuing the end session so that we allow a full second to elapse from the time the session was started.
@@ -1564,14 +1564,14 @@ def loadMtpObjectInfoCacheFromDisk():
 			
 			#
 			# note: in v1.1 we moved the appdata for OSX out of app bundle and into user's home directory. this means the data
-			# will be shared between the frozen OSX app and any non-frozen version of airnef run on the same machine (ie, running
-			# airnef from source instead of OSX app). in the frozen app this module runs as airnefcmd (__name__ == airnefcmd) due
-			# to the OSX wrapper importing it and executing it rather than airnefcmd being the main execution module,
+			# will be shared between the frozen OSX app and any non-frozen version of airmtp run on the same machine (ie, running
+			# airmtp from source instead of OSX app). in the frozen app this module runs as airmtpcmd (__name__ == airmtpcmd) due
+			# to the OSX wrapper importing it and executing it rather than airmtpcmd being the main execution module,
 			# whereas in all other cases on other platforms and OSX non-frozen this module runs as __main__. this v1.1 change causes
 			# the OSX frozen app's picke load of the objcache to fail with an AttributeError, because the top-level module
-			# associated with 'MtpObjectInfoCacheTuple' will be different (c__main__ vs cairnefcmd). one fix would be to move
+			# associated with 'MtpObjectInfoCacheTuple' will be different (c__main__ vs cairmtpcmd). one fix would be to move
 			# the defintion of 'MtpObjectInfoCacheTuple' into its own module, that way the module in the pickle data would be 
-			# the same no matter how airnefcmd was run. the problem with this is that the pickle data wouldn't be backwards
+			# the same no matter how airmtpcmd was run. the problem with this is that the pickle data wouldn't be backwards
 			# compatible with v1.0, which is fine except v1.0 wasn't catching the 'AttributeError' exception for the pickle load,
 			# which means it'll throw an uncaptured exception rather than gracefully discarding the cache and recreate it. for
 			# this reason I'm going to keep the situation as-is and let the OSX frozen vs non-frozen executions recreate the
@@ -1627,7 +1627,7 @@ def loadMtpObjectInfoCacheFromDisk():
 # the cache's coherency. The coherency must be checked because MTP object handles
 # aren't guaranteed to be persistent across camera power cycles (per the MTP spec), which
 # means an obj handle may refer to a different file on the camera than what we have
-# cached from the previous airnef session. This makes the entire proposition of caching
+# cached from the previous airmtp session. This makes the entire proposition of caching
 # these objs a bit risky, but the performance beneifts are too great to ignore because
 # MTP_OP_GetObjectInfo can operate very slowly on some Nikon bodies. Based on my
 # experimentation both Nikon and Canon encode object handles based on the filename
@@ -3504,7 +3504,7 @@ def appMain():
 					# the workflow where the user can turn WiFi off on the camera for as long as he
 					# wants for intervals he doesn't want realtime capture). for this recovery
 					# buildMtpObjects() retrieved all objects from the camera, including those captured
-					# before the user launched airnefcmd. to exclude those files we set the capture date
+					# before the user launched airmtpcmd. to exclude those files we set the capture date
 					# filter to our app's launch time. rather than permanently keeping this capture date
 					# filter in place for realtime operation we only set while perfomring downloadMtpFileObjects();
 					# that way we're only sensitive to camera vs system time skew during the recovery
@@ -3617,9 +3617,9 @@ def appMain():
 				# will remain in the 'Send to Computer' screen/mode. the camera will accept future TCP/IP
 				# socket connections but will not respond to any MTP requests, so warn user about this
 				#
-				applog_i("\nBefore running airnef again please press 'Cancel' on your Sony camera's\n"\
+				applog_i("\nBefore running airmtp again please press 'Cancel' on your Sony camera's\n"\
 						 "'Send to Computer' screen and select 'Send to Computer' again. Failing to\n"\
-						 "do this will cause the next airnef session to not negotiate successfully.")
+						 "do this will cause the next airmtp session to not negotiate successfully.")
 						 
 		if bEchoNewlineBeforeReturning:
 			applog_i("")
@@ -3649,7 +3649,7 @@ def deleteFilesMarkedForDeletionOnExit():
 # shutdown and then tells the applog module to shut itself down
 #			
 def shutdownApplog():
-	applog(">>>> airnefcmd session over - App Exit Time: {:s}".format(strutil.getDateTimeStr(fMilitaryTime=True)), APPLOGF_LEVEL_INFORMATIONAL | APPLOGF_DONT_WRITE_TO_CONSOLE) # used by utils to see if we exited gracefully
+	applog(">>>> airmtpcmd session over - App Exit Time: {:s}".format(strutil.getDateTimeStr(fMilitaryTime=True)), APPLOGF_LEVEL_INFORMATIONAL | APPLOGF_DONT_WRITE_TO_CONSOLE) # used by utils to see if we exited gracefully
 	applog_shutdown()
 
 	
@@ -3666,16 +3666,16 @@ def main():
 	#
 	# init applog, to allow logging of output to log files
 	#
-	_errno = applog_init(APPLOGF_LEVEL_INFORMATIONAL | APPLOGF_LEVEL_ERROR, os.path.join(g.appDataDir, "airnefcmd-log-last.txt"),\
-		os.path.join(g.appDataDir, "airnefcmd-log-lifetime.txt"))
+	_errno = applog_init(APPLOGF_LEVEL_INFORMATIONAL | APPLOGF_LEVEL_ERROR, os.path.join(g.appDataDir, "airmtpcmd-log-last.txt"),\
+		os.path.join(g.appDataDir, "airmtpcmd-log-lifetime.txt"))
 	if _errno:
 		sys.exit(_errno)
 	
 	#
 	# display app banner
 	#
-	applog_i("\nairnef v{:s} - Wireless transfer of images/movies for Nikon cameras [GPL v3]".format(AIRNEFCMD_APP_VERSION))
-	applog_i("Copyright (c) TestCams.com, Time: {:s}, Py: {:d}.{:d}.{:d}, OS: {:s}\n".format(strutil.getDateTimeStr(fMilitaryTime=True),\
+	applog_i("\nairmtp v{:s} - MTP network transfer of images/movies for cameras [GPL v3]".format(AIRMTPCMD_APP_VERSION))
+	applog_i("Time: {:s}, Py: {:d}.{:d}.{:d}, OS: {:s}\n".format(strutil.getDateTimeStr(fMilitaryTime=True),\
 		sys.version_info.major, sys.version_info.minor, sys.version_info.micro,
 		platform.system()))
 	g.appStartTimeEpoch = time.time()
