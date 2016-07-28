@@ -28,54 +28,16 @@ Airnef is two applications - a GUI front-end and a command-line app. The GUI fro
 
 This is a partial list of cameras that tested. Even if your camera is not listed it may still work.
 
-<table width="60%" border="1" cellspacing="0">
-    <td width="40%"><strong>Camera</strong></td>
-    <td width="18%" align="center"><strong>Select Images in Camera</strong></td>
-    <td width="18%" align="center"><strong>Select Images on Computer</strong></td>
-    <td width="24%" align="center"><strong>Realtime Download<sup>1</sup></strong></td>
-  <tr>
-    <td>All Nikon cameras built-in WiFi</td>
-    <td align="center"><p>Yes</p></td>
-    <td align="center">Yes</td>
-    <td align="center">All DSLRs<sup>2</sup></td>
-  </tr>
-  <tr>
-    <td>All Nikon cameras with WU-1a/WU-1b Adapter</td>
-    <td align="center">No<sup>3</sup></td>
-    <td align="center">Yes</td>
-    <td align="center">Yes</td>
-  </tr>
-  <tr>
-    <td>All Canon Cameras with WiFi</td>
-    <td align="center">No</td>
-    <td align="center">Yes</td>
-    <td align="center">Yes</td>
-  </tr>
-  <tr>
-    <td>All Sony Cameras with WiFi</td>
-    <td align="center">No</td>
-    <td align="center">Yes</td>
-    <td align="center">Staged Realtime<sup>4</sup></td>
-  </tr>
-  <tr>
-    <td>Nikon D750, D7200</td>
-    <td align="center">Yes</td>
-    <td align="center">Yes</td>
-    <td align="center">Yes</td>
-  </tr>
-  <tr>
-    <td>Nikon J4, J5</td>
-    <td align="center">Yes</td>
-    <td align="center">Yes</td>
-    <td align="center">Staged Realtime<sup>4</sup></td>
-  </tr>
-  <tr>
-    <td>Canon 6D</td>
-    <td align="center">Yes</td>
-    <td align="center">Yes</td>
-    <td align="center">Yes</td>
-  </tr>
-</table>
+| **Camera** | **Select Images in Camera** | **Select Images on Computer** | **Realtime Download<sup>1</sup> |
+| All Nikon cameras with built-in WiFi | Yes | Yes | All DSLRs<sup>2</sup> |
+| All Nikon cameras with WU-1a/WU-1b Adapter | No<sup>3</sup> | Yes | Yes |
+| All Canon Cameras with WiFi | No | Yes | Yes |
+| All Sony Cameras with WiFi  | No | Yes | Staged Realtime<sup>4</sup> |
+| Nikon D750, D7200 | Yes | Yes | Yes |
+| Nikon J4, J5 | Yes | Yes | Staged Realtime<sup>4</sup> |
+| Canon 6D | Yes | Yes | Yes |
+
+
 <p id="SupportTable_Footnote_1"><sup>1</sup>An easy way to tell if your camera supports Realtime Download is if it allows you to take photographs while its WiFi interface is enabled and in the mode required by Airnef. For example most Nikon DSLRs support shooting with WiFi enabled. In contrast, Sony cameras (in the <a href="sony_send_to_computer_select.gif" onclick="popup('popupImageDiv_1', event, this, 320, 180)">Send to Computer</a> mode) and the Nikon J4/J5 require you to leave the WiFi mode before you can use the functionality of the camera again<br/>
 <sup>2</sup>Nikon 1 cameras with built-in WiFi such as the J4 and J5 do not support Realtime download but can use staged realtime transfers<br />
 <sup>3</sup>Nikon bodies using an external WU-1a or WU-1b WiFi adapter have no separate menu option for selecting images to upload and the alternate mechanism of selecting images for upload  in the playback menu (present in cameras with native WiFi support like the D7200) is unavailable because the playback menu is disabled when WiFi is on for cameras with an external WiFi adapter.<br />
