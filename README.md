@@ -28,7 +28,8 @@ Airnef is two applications - a GUI front-end and a command-line app. The GUI fro
 
 This is a partial list of cameras that tested. Even if your camera is not listed it may still work.
 
-| **Camera** | **Select Images in Camera** | **Select Images on Computer** | **Realtime Download<sup>1</sup> |
+| Camera | Select Images in Camera | Select Images on Computer | Realtime Download<sup>1</sup> |
+| --- | --- | --- | --- |
 | All Nikon cameras with built-in WiFi | Yes | Yes | All DSLRs<sup>2</sup> |
 | All Nikon cameras with WU-1a/WU-1b Adapter | No<sup>3</sup> | Yes | Yes |
 | All Canon Cameras with WiFi | No | Yes | Yes |
