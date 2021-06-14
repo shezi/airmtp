@@ -1,6 +1,6 @@
 # airmtp -- Wireless download from your MTP-enabled devices
 
-**Please note**: This is a copy of the repository originally found on [testcams.com](testcams.com). I am not the original maintainer, and as such I cannot offer much advice on this code, the protocols or the project.
+**Please note**: This is a copy of the repository for a project called "Airnef" originally found on [testcams.com](https://testcams.com/airnef/). I am not the original maintainer, and as such I cannot offer much advice on this code, the protocols or the project.
 
 # original readme
 
@@ -1342,7 +1342,7 @@ Cameras).
 
 ## Developer Notes
 
-For anyone interested in the ongoing progress of Airmtp development, there is a [developer notes](http://www.testcams.com/airmtp/developer/) page.
+For anyone interested in the ongoing progress of Airmtp development, there is a [developer notes](http://www.testcams.com/airnef/developer/) page.
 
 ## GPL v3 License
 
