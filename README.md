@@ -1,6 +1,6 @@
 # airmtp -- Wireless download from your MTP-enabled devices
 
-**Please note**: This is a copy of the repository originally found on [testcams.com]. I am not the original maintainer, and as such I cannot offer much advice on this code, the protocols or the project.
+**Please note**: This is a copy of the repository originally found on [testcams.com](testcams.com). I am not the original maintainer, and as such I cannot offer much advice on this code, the protocols or the project.
 
 # original readme
 
